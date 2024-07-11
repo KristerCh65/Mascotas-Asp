@@ -1,0 +1,96 @@
+﻿@model DetalleMascotas.Models.ViewModel.OwnerViewModel
+
+@{
+    ViewBag.Title = "Detalle Mascotas";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<span>@ViewBag.Message</span>
+
+@using (Html.BeginForm("Add", "Maestro", FormMethod.Post))
+{
+
+    <div class="row">
+        <div class="form-group">
+            @Html.LabelFor(o => o.OwnerName)
+            @Html.TextBoxFor(o => o.OwnerName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(o => o.OwnerAddress)
+            @Html.TextBoxFor(o => o.OwnerAddress)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(o => o.OwnerPhone)
+            @Html.TextBoxFor(o => o.OwnerPhone)
+        </div>
+    </div>
+    <br />
+    <h3>Mascotas</h3>
+    <hr />
+    <div class="row">
+        <div class="form-group">
+            <label>Pet Name</label>
+            <input type="text" id="PetName" alt="Pet Name" />
+            <label>Age</label>
+            <input type="number" id="Age" alt="Age" />
+            <label>Color</label>
+            <input type="text" id="Color" alt="Color" />
+            <input type="button" value="Add" id="Add" onclick="AddPet(); return false;" />
+        </div>
+        <div id="MascotasDiv">
+            <table id="MascotasTable">
+                <tr>
+                    <th>Pet Name</th>
+                    <th>Age</th>
+                    <th>Color</th>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<script>
+    var num = 0;
+    function AddPet() {
+        //get values
+        var petName = document.getElementById("PetName").value;
+        var age = document.getElementById("Age").value;
+        var color = document.getElementById("Color").value;
+        var table = document.getElementById("MascotasTable");
+        var row = table.insertRow(1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        cell1.innerHTML = petName;
+        cell2.innerHTML = age;
+        cell3.innerHTML = color;
+
+        //add hidden fields
+        var DivMascotas = document.getElementById("MascotasDiv");
+        var hindex = document.createElement("input");
+        hindex.name = "mascotas.Index", hindex.type = "hidden", hindex.value = num;
+        var petNameField = document.createElement("input");
+        petNameField.name = "mascotas[" + num + "].PetName", petNameField.type = "hidden", petNameField.value = petName;
+        var ageField = document.createElement("input");
+        ageField.name = "mascotas[" + num + "].Age", ageField.type = "hidden", ageField.value = age;
+        var colorField = document.createElement("input");
+        colorField.name = "mascotas[" + num + "].Color", colorField.type = "hidden", colorField.value = color;
+
+        DivMascotas.appendChild(hindex);
+        DivMascotas.appendChild(petNameField);
+        DivMascotas.appendChild(ageField);
+        DivMascotas.appendChild(colorField);
+
+        //clear values
+        document.getElementById("PetName").value = "";
+        document.getElementById("Age").value = "";
+        document.getElementById("Color").value = "";
+
+        num++;
+    }
+</script>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PetFinderModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="PetFinderEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Owner" EntityType="PetFinderModel.Owner" />
+    <EntitySet Name="Pet" EntityType="PetFinderModel.Pet" />
+    <AssociationSet Name="FK__Pet__OwnerId__29572725" Association="PetFinderModel.FK__Pet__OwnerId__29572725">
+      <End Role="Owner" EntitySet="Owner" />
+      <End Role="Pet" EntitySet="Pet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Owner">
+    <Key>
+      <PropertyRef Name="OwnerId" />
+    </Key>
+    <Property Name="OwnerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OwnerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Direction" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Pet" Relationship="PetFinderModel.FK__Pet__OwnerId__29572725" FromRole="Owner" ToRole="Pet" />
+  </EntityType>
+  <EntityType Name="Pet">
+    <Key>
+      <PropertyRef Name="PetId" />
+    </Key>
+    <Property Name="PetId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PetName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="age" Type="Int32" />
+    <Property Name="color" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="OwnerId" Type="Int32" />
+    <NavigationProperty Name="Owner" Relationship="PetFinderModel.FK__Pet__OwnerId__29572725" FromRole="Pet" ToRole="Owner" />
+  </EntityType>
+  <Association Name="FK__Pet__OwnerId__29572725">
+    <End Type="PetFinderModel.Owner" Role="Owner" Multiplicity="0..1" />
+    <End Type="PetFinderModel.Pet" Role="Pet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Owner">
+        <PropertyRef Name="OwnerId" />
+      </Principal>
+      <Dependent Role="Pet">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

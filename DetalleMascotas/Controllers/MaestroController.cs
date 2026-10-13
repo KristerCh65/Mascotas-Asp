@@ -14,12 +14,19 @@ namespace DetalleMascotas.Controllers
         // GET: Maestro
         public ActionResult Add()
         {
+            ViewBag.Message = TempData["Message"];
             return View();
         }
 
         [HttpPost]
-        public async  Task<ActionResult> Add(OwnerViewModel ownerViewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Add(OwnerViewModel ownerViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(ownerViewModel);
+            }
+
             try
             {
                 using (PetFinderEntities dbContext = new PetFinderEntities())
@@ -29,35 +36,28 @@ namespace DetalleMascotas.Controllers
                     owner.Direction = ownerViewModel.OwnerAddress;
                     owner.Phone = ownerViewModel.OwnerPhone;
 
-                    dbContext.Owner.Add(owner);     
-                    dbContext.SaveChanges();
-                    
-                    foreach (var item in ownerViewModel.Mascotas)
+                    foreach (var item in ownerViewModel.Mascotas ?? new List<MascotaViewModel>())
                     {
                         Pet pet = new Pet();
                         pet.PetName = item.PetName;
                         pet.age = item.age;
                         pet.color = item.color;
-                        pet.OwnerId = owner.OwnerId;
                         owner.Pet.Add(pet);
-                        dbContext.Pet.Add(pet);
                     }
 
-                    ownerViewModel.OwnerId = owner.OwnerId;
-
+                    // Owner and pets are saved in a single transaction
+                    dbContext.Owner.Add(owner);
                     await dbContext.SaveChangesAsync();
-
                 }
 
-                ViewBag.Message = "Register added successfully";
-                return View();
+                TempData["Message"] = "Register added successfully";
+                return RedirectToAction("Add");
             }
             catch (Exception ex)
             {
-
-                return View();
+                ViewBag.Message = "Error saving the register: " + ex.Message;
+                return View(ownerViewModel);
             }
-
         }
     }
 }

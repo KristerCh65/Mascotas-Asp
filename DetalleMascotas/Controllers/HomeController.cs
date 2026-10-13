@@ -17,7 +17,7 @@ namespace DetalleMascotas.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
-            return View("Contact");
+            return View();
         }
 
         public ActionResult Contact()
